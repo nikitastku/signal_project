@@ -25,7 +25,7 @@ public class AlertGenerator implements PatientDataGenerator {
                 }
             } else {
                 //Changed the variable name to camelCase
-                private static final double lambda = 0.1; // Average rate (alerts per period), adjust based on desired frequency
+                double lambda = 0.1; // Average rate (alerts per period), adjust based on desired frequency
                 double p = -Math.expm1(-lambda); // Probability of at least one alert in the period
                 boolean alertTriggered = randomGenerator.nextDouble() < p;
 
