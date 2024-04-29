@@ -50,13 +50,13 @@ public class FileOutputStrategy implements OutputStrategy {
     public void output(int patientId, long timestamp, String label, String data) {
         try {
             // Create the directory
-            Files.createDirectories(Paths.get(BaseDirectory));
+            Files.createDirectories(Paths.get(baseDirectory));
         } catch (IOException e) {
             System.err.println("Error creating base directory: " + e.getMessage());
             return;
         }
         // Set the filePath variable, changed the variable to camelCase
-        String filePath = FILE_MAP.computeIfAbsent(label, k -> Paths.get(BaseDirectory, label + ".txt").toString());
+        String filePath = FILE_MAP.computeIfAbsent(label, k -> Paths.get(baseDirectory, label + ".txt").toString());
 
         // Write the data to the file
         try (PrintWriter out = new PrintWriter(
