@@ -55,7 +55,7 @@ public class AlertGenerator implements PatientDataGenerator {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error generating alert " + e.getMessage); //Changed the exception messge, catch blocks should log the exception, consider alertStates more specific exception and add alertStates comment rather than just printing the stack trace
+            System.err.println("Error generating alert " + e.getMessage()); //Changed the exception messge, catch blocks should log the exception, consider alertStates more specific exception and add alertStates comment rather than just printing the stack trace
             e.printStackTrace();
         }
     }
