@@ -1,7 +1,10 @@
 package com.alerts;
 
+import java.util.List;
+
 import com.data_management.DataStorage;
 import com.data_management.Patient;
+import com.data_management.PatientRecord;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -35,8 +38,87 @@ public class AlertGenerator {
      * @param patient the patient data to evaluate for alert conditions
      */
     public void evaluateData(Patient patient) {
-        // Implementation goes here
+        List<PatientRecord> records = dataStorage.getRecords(patient.getPatientId(), 1700000000000L, 1800000000000L);
+        checkBloodPressure(records, patient);
+        // You need to adjust the methods to handle a list of records if needed.
+        for (PatientRecord record : records) {
+            if ("BloodSaturation".equals(record.getRecordType())) {
+                checkBloodSaturation(record, patient);
+            }
+            if ("ECG".equals(record.getRecordType())) {
+                checkECG(record, patient);
+            }
+            if ("BloodLevels".equals(record.getRecordType())){
+                checkBloodLevels(records, patient);
+            }
+        }
     }
+
+    // Check conditions for blood pressure and trigger alerts if needed
+    private void checkBloodPressure(List<PatientRecord> records, Patient patient) {
+        double systolic = 0;
+        double diastolic = 0;
+        boolean systolicSet = false;
+        boolean diastolicSet = false;
+
+        // Iterate through records to find systolic and diastolic pressures
+        for (PatientRecord record : records) {
+            if ("SystolicPressure".equals(record.getRecordType())) {
+                systolic = record.getMeasurementValue();
+                systolicSet = true;
+            } else if ("DiastolicPressure".equals(record.getRecordType())) {
+                diastolic = record.getMeasurementValue();
+                diastolicSet = true;
+            }
+
+            // If both systolic and diastolic pressures are set, check against threshold values
+            if (systolicSet && diastolicSet) {
+                if (systolic > 180 || systolic < 90 || diastolic > 120 || diastolic < 60) {
+                    // Trigger alert for critical blood pressure
+                    triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Critical Blood Pressure", System.currentTimeMillis()));
+                }
+            }
+        }
+    }
+    
+    // Check conditions for blood saturation and trigger alerts if needed
+    private void checkBloodSaturation(PatientRecord record, Patient patient) {
+        double saturation = record.getMeasurementValue();
+        if (saturation < 92) {
+            triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Low Blood Saturation", record.getTimestamp()));
+        }
+    }
+
+    // Check conditions for ECG and trigger alerts if needed
+    private void checkECG(PatientRecord record, Patient patient) {
+        double ecgValue = record.getMeasurementValue();
+        if (ecgValue < 50 || ecgValue > 100) { // Assuming these are thresholds for abnormal ECG
+            triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Abnormal ECG", record.getTimestamp()));
+        }
+    }
+
+     // Check conditions for blood levels and trigger alerts if needed
+    private void checkBloodLevels(List<PatientRecord> records, Patient patient) {
+        for (PatientRecord record : records) {
+            if ("Cholesterol".equals(record.getRecordType())) {
+                double cholesterol = record.getMeasurementValue();
+                if (cholesterol > 240) { // High cholesterol alert threshold
+                    triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "High Cholesterol", record.getTimestamp()));
+                }
+            } else if ("WhiteBloodCells".equals(record.getRecordType())) {
+                double whiteCells = record.getMeasurementValue();
+                if (whiteCells < 4 || whiteCells > 11) { // Abnormal white blood cells count
+                    triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Abnormal White Blood Cells Count", record.getTimestamp()));
+                }
+            } else if ("RedBloodCells".equals(record.getRecordType())) {
+                double redCells = record.getMeasurementValue();
+                if (redCells < 4.5 || redCells > 6.0) { // Abnormal red blood cells count
+                    triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Abnormal Red Blood Cells Count", record.getTimestamp()));
+                }
+            }
+        }
+    }
+    
 
     /**
      * Triggers an alert for the monitoring system. This method can be extended to
@@ -48,5 +130,6 @@ public class AlertGenerator {
      */
     private void triggerAlert(Alert alert) {
         // Implementation might involve logging the alert or notifying staff
+        System.out.println("Alert triggered: " + alert.getCondition() + " for Patient ID: " + alert.getPatientId());
     }
 }
