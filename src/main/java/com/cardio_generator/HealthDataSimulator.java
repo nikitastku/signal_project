@@ -49,6 +49,7 @@ public class HealthDataSimulator {
 
         parseArguments(args);
 
+        outputStrategy = new WebSocketOutputStrategy(8080);
         scheduler = Executors.newScheduledThreadPool(patientCount * 4);
 
         List<Integer> patientIds = initializePatientIds(patientCount);
