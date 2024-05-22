@@ -65,7 +65,7 @@ public class HealthDataSimulator {
         HealthDataSimulator simulator = HealthDataSimulator.getInstance();
         simulator.parseArguments(args);
 
-        simulator.outputStrategy = new WebSocketOutputStrategy(8080);
+        HealthDataSimulator.outputStrategy = new WebSocketOutputStrategy(8080);
         scheduler = Executors.newScheduledThreadPool(patientCount * 4);
 
         List<Integer> patientIds = simulator.initializePatientIds(patientCount);
