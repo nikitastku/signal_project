@@ -3,6 +3,8 @@ package com.data_management;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * The {@code SimpleDataReader} class implements the {@link DataReader} interface
@@ -49,4 +51,18 @@ public class SimpleDataReader implements DataReader {
         }
         reader.close();
     }
+
+@Override
+    public void connectToWebSocket(String url, DataStorage dataStorage) throws IOException {
+         // Connect to the WebSocket server to handle real-time data
+        try {
+            URI uri = new URI(url);
+            WebSocketClientImpl client = new WebSocketClientImpl(uri, dataStorage);
+            client.connectBlocking(); // Blocking connect to ensure connection is established
+        } catch (URISyntaxException | InterruptedException e) {
+            // Handle connection errors
+            throw new IOException("Failed to connect to WebSocket", e);
+        }
+    }
+    
 }
