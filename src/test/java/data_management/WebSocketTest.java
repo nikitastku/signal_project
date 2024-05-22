@@ -68,14 +68,12 @@ public class WebSocketTest {
     @Test
     public void testOnClose() {
         client.onClose(0, "Test Close", false);
-        // Additional logic can be added to verify the disconnection
         assertFalse(client.isOpen());
     }
 
     @Test
     public void testOnError() {
         client.onError(new Exception("Test Exception"));
-        // Additional logic can be added to verify error handling
     }
 
     @Test
