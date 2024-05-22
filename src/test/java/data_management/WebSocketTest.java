@@ -26,7 +26,7 @@ public class WebSocketTest {
 
     @BeforeEach
     public void setUp() {
-        storage = new DataStorage();
+        storage = DataStorage.getInstance();
         try {
             client = new WebSocketClientImpl(new URI("ws://localhost:8080"), storage);
         } catch (URISyntaxException e) {
