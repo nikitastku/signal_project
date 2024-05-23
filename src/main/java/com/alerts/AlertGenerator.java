@@ -40,7 +40,6 @@ public class AlertGenerator {
     public void evaluateData(Patient patient) {
         List<PatientRecord> records = dataStorage.getRecords(patient.getPatientId(), 1700000000000L, 1800000000000L);
         checkBloodPressure(records, patient);
-        // You need to adjust the methods to handle a list of records if needed.
         for (PatientRecord record : records) {
             if ("BloodSaturation".equals(record.getRecordType())) {
                 checkBloodSaturation(record, patient);
@@ -92,7 +91,7 @@ public class AlertGenerator {
     // Check conditions for ECG and trigger alerts if needed
     private void checkECG(PatientRecord record, Patient patient) {
         double ecgValue = record.getMeasurementValue();
-        if (ecgValue < 50 || ecgValue > 100) { // Assuming these are thresholds for abnormal ECG
+        if (ecgValue < 50 || ecgValue > 100) { 
             triggerAlert(new Alert(Integer.toString(patient.getPatientId()), "Abnormal ECG", record.getTimestamp()));
         }
     }
